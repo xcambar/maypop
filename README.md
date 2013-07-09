@@ -1,5 +1,7 @@
 # Maypop
 
+> Work in Progress: Nothing is working ATM. Don't be surprised ;)
+
 __Maypop__ is a simple implementation of Apect Oriented Programming (AOP) for any ECMAScript5 engine.
 Hence it works on Node.js and modern browsers.
 
