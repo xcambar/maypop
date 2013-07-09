@@ -10,11 +10,8 @@ objects by declaring functions that should be run _before_, _after_ and _around_
 
 # Example
 
-var maypop = require('maypop');
-
-var myFn = function (a, b) {
-  return a/b;
-};
+    //Need to find better than "just an example"
+    //meanwhile, you should read the tests to have a clear view of what's possible
 
 # Licence
 
