@@ -3,6 +3,10 @@
 __Maypop__ is a simple implementation of Apect Oriented Programming (AOP) for any ECMAScript5 engine.
 Hence it works on Node.js and modern browsers.
 
+# Status
+
+[ ![Codeship Status for xcambar/maypop](https://www.codeship.io/projects/e9fb6f50-ca97-0130-5ff8-0ac4a233f6f3/status?branch=master) ](https://www.codeship.io/projects/4840)
+
 # Aspect oriented programming
 
 Aspect oriented programming allows developers to add behaviour (_aspects_) to functions and
