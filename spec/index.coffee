@@ -17,12 +17,13 @@ describe 'AOP on a function', ->
     maypop(->).should.be.a 'function'
   describe 'the returned function', ->
     beforeEach ->
-      @original = ->
+      @returnValue = {}
+      @original = -> @returnValue
       @maypop = maypop(@original)
     it 'should have a "before" and "after" property', ->
       @maypop.should.contain.keys ['before', 'after']
     it 'should return the same value as the original function', ->
-      @maypop().should.be.equal @original()
+      @maypop().should.equal @original()
   describe 'adding aspects', ->
     beforeEach ->
       @returnValue = {in: "credible"}
@@ -34,8 +35,8 @@ describe 'AOP on a function', ->
       @maypop.before.bind(undefined, ->).should.not.throw()
       @maypop.after.bind(undefined, ->).should.not.throw()
     it 'should return the function created by maypop when executing "before" or "after"', ->
-      @maypop.before(->).should.be.equal @maypop
-      @maypop.after(->).should.be.equal @maypop
+      @maypop.before(->).should.equal @maypop
+      @maypop.after(->).should.equal @maypop
     it 'should run the function passed to "before" before the original function', ->
       spy = sinon.spy()
       @maypop.before spy
