@@ -1,0 +1,35 @@
+{
+  "name": "maypop",
+  "version": "0.1.0",
+  "description": "Aspect Oriented Programming (AOP) for ES% engines (Node.js, modern browsers...)",
+  "main": "index.js",
+  "scripts": {
+    "test": "`npm bin`/coffee spec/runner.coffee",
+    "local-coverage": "`npm bin`/coffee --js < spec/runner.coffee >spec/__compiled_runner.js && `npm bin`/istanbul cover spec/__compiled_runner.js -x \"spec/**\" 2> /dev/null && rm -f spec/__compiled_runner.js",
+    "coveralls": "`npm bin`/coffee --js < spec/runner.coffee >spec/__compiled_runner.js && `npm bin`/istanbul cover spec/__compiled_runner.js -x \"spec/**\" --report lcovonly 2> /dev/null && rm -f spec/__compiled_runner.js && `npm bin`/coveralls < ./coverage/lcov.info"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/xcambar/maypop.git"
+  },
+  "keywords": [
+    "aspect",
+    "aop",
+    "es5"
+  ],
+  "author": "Xavier Cambar <xcambar@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "chai": "~1.6.0",
+    "mocha": "~1.9.0",
+    "coffee-script-redux": "~2.0.0-beta5",
+    "sinon": "~1.7.2",
+    "sinon-chai": "~2.4.0",
+    "istanbul": "~0.1.35",
+    "coveralls.io": "~2.1.0"
+  },
+  "readmeFilename": "README.md",
+  "bugs": {
+    "url": "https://github.com/xcambar/maypop/issues"
+  }
+}
