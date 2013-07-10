@@ -34,9 +34,6 @@ describe 'AOP on a function', ->
       @maypop.after.bind(undefined).should.throw()
       @maypop.before.bind(undefined, ->).should.not.throw()
       @maypop.after.bind(undefined, ->).should.not.throw()
-    it 'should return the function created by maypop when executing "before" or "after"', ->
-      @maypop.before(->).should.equal @maypop
-      @maypop.after(->).should.equal @maypop
     it 'should run the function passed to "before" before the original function', ->
       spy = sinon.spy()
       @maypop.before spy
