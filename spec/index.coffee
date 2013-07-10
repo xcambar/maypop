@@ -41,7 +41,7 @@ describe 'AOP on a function', ->
       spy.should.have.been.calledBefore(@original)
     it 'should run the function passed to "after" after the original function', ->
       spy = sinon.spy()
-      @maypop.before spy
+      @maypop.after spy
       @maypop()
       spy.should.have.been.calledAfter(@original)
     describe 'arguments of aspects', ->
