@@ -20,17 +20,37 @@ function expectLength (obj) {
 }
 
 function addAspectsToFunction (fn) {
-  fn.before = function() {
+  var beforeRegistry = [];
+  var afterRegistry = [];
+
+  var functionWithAspects = function () {
+    var args = arguments;
+    beforeRegistry.forEach(function (fn) {
+      fn.apply(undefined, args);
+    });
+    var ret = fn.apply(this, arguments);
+    afterRegistry.forEach(function (fn) {
+      fn.call(undefined, ret);
+    });
+    return ret;
+  };
+  functionWithAspects.before = function() {
     var args = slice(arguments);
     expectLength(args);
     args.forEach(expectFunction);
+    args.forEach(function (arg) {
+      beforeRegistry.push(arg);
+    });
   };
-  fn.after = function() {
+  functionWithAspects.after = function() {
     var args = slice(arguments);
     expectLength(args);
     args.forEach(expectFunction);
+    args.forEach(function (arg) {
+      afterRegistry.push(arg);
+    });
   };
-  return fn;
+  return functionWithAspects;
 }
 
 module.exports = function (arg) {
