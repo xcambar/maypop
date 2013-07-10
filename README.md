@@ -1,6 +1,6 @@
 # Maypop
 
-> Work in Progress: Nothing is working ATM. Don't be surprised ;)
+> Work in Progress: Features are added on a daily basis.
 
 __Maypop__ is a simple implementation of Apect Oriented Programming (AOP) for any ECMAScript5 engine.
 Hence it works on Node.js and modern browsers.
@@ -16,8 +16,36 @@ objects by declaring functions that should be run _before_, _after_ and _around_
 
 # Example
 
+    var maypop = require('maypop');
+
+    var noAspects = function () {
+
+    };
+    var withAspects = maypop(noAspects);
+
+    withAspects.before(function () {/*   */);
+    withAspects.before(function () {/*   */);
+    withAspects.before(function () {/*   */);
+
+    withAspects.after(function () {/*   */);
+    withAspects.after(function () {/*   */);
+
+    //Execute
+    withAspects();
+
     //Need to find better than "just an example"
     //meanwhile, you should read the tests to have a clear view of what's possible
+
+# Features
+
+## Add run points to
+
+* functions
+
+## Runpoints available
+
+* __before__: `before` runpoints are executed on their own context, and take the same parameters as the initial function.
+* __after__: `after` runpoints are executed on their own context, and take the return value of the initial function as unique parameter
 
 # Licence
 
