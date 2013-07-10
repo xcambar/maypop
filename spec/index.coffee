@@ -30,7 +30,7 @@ describe 'AOP on a function', ->
       @original = sinon.spy(-> @returnValue)
       @maypop = maypop(@original)
     it 'should only accept functions as arguments', ->
-      @maypop.before.bind(undefined).should.throw()
+      @maypop.before.bind(undefined).should.throw(Error)
       @maypop.after.bind(undefined).should.throw()
       @maypop.before.bind(undefined, ->).should.not.throw()
       @maypop.after.bind(undefined, ->).should.not.throw()
