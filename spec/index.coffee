@@ -68,11 +68,6 @@ describe 'AOP on a function', ->
     it 'should only accept functions as arguments', ->
       @maypop.after.bind(undefined).should.throw()
       @maypop.after.bind(undefined, ->).should.not.throw()
-    it 'should run the function passed to "before" before the original function', ->
-      spy = sinon.spy()
-      @maypop.before spy
-      @maypop()
-      spy.should.have.been.calledBefore(@original)
     it 'should run the function passed after the original function', ->
       spy = sinon.spy()
       @maypop.after spy
@@ -85,7 +80,7 @@ describe 'AOP on a function', ->
         @maypop {}, true, "123"
         afterSpy.should.have.been.calledWith @returnValue
     describe 'multiple calls to aspects', ->
-      it 'should be possible to call "before" and "after" multiple times', ->
+      it 'should be possible to call "after" multiple times', ->
         @maypop.after(->)
         @maypop.after.bind(undefined, ->).should.not.throw
       it 'should execute the functions in the order they are added', ->
