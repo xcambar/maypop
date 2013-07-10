@@ -52,7 +52,7 @@ describe 'AOP on a function', ->
         beforeSpy.should.have.been.calledWith {}, true, "123"
       it 'should pass the parameters to the original function', ->
         @maypop {}, true, "123"
-        @original.should.have.beenCalledWith {}, true, "123"
+        @original.should.have.been.calledWith {}, true, "123"
       it 'should receive the returned value of the original function on "after"', ->
         afterSpy = sinon.spy()
         @maypop.after(afterSpy)
