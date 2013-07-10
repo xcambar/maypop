@@ -80,7 +80,7 @@ describe 'AOP on a function', ->
         @maypop.after spy2
         @maypop()
         @original.should.have.been.calledBefore spy1
-        @spy1.should.have.been.calledBefore spy2
+        spy1.should.have.been.calledBefore spy2
     xdescribe "Adding multiple aspects at once", ->
     xdescribe "exceptions", ->
 
