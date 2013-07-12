@@ -59,6 +59,33 @@ describe 'AOP on a function', ->
         @maypop()
         spy1.should.have.been.calledBefore spy2
         spy2.should.have.been.calledBefore @original
+    describe "exceptions", ->
+      it 'should not call the main function', ->
+        beforeFn = -> throw 'Ouch!'
+        fn = sinon.spy ->
+        fnWithAspects = maypop fn
+        fnWithAspects.before beforeFn
+        fnWithAspects.bind(undefined).should.throw()
+        fn.should.not.have.been.called
+      it 'should not call the following "before" functions', ->
+        beforeFn = -> throw 'Ouch!'
+        beforeFn2 = sinon.spy ->
+        fn = sinon.spy ->
+        fnWithAspects = maypop fn
+        fnWithAspects.before beforeFn, beforeFn2
+        fnWithAspects.bind(undefined).should.throw()
+        beforeFn2.should.not.have.been.called
+        fn.should.not.have.been.called
+      it 'should not call the "after" functions', ->
+        beforeFn = -> throw 'Ouch!'
+        afterFn = sinon.spy ->
+        fn = sinon.spy ->
+        fnWithAspects = maypop fn
+        fnWithAspects.before beforeFn
+        fnWithAspects.after afterFn
+        fnWithAspects.bind(undefined).should.throw()
+        afterFn.should.not.have.been.called
+
 
   describe 'After', ->
     beforeEach ->
@@ -91,6 +118,16 @@ describe 'AOP on a function', ->
         @maypop()
         @original.should.have.been.calledBefore spy1
         spy1.should.have.been.calledBefore spy2
+    describe "exceptions", ->
+      it 'should not call the following "after" functions', ->
+        afterFn = sinon.spy -> throw 'Ouch!'
+        afterFn2 = sinon.spy ->
+        fn = sinon.spy ->
+        fnWithAspects = maypop fn
+        fnWithAspects.after afterFn, afterFn2
+        fnWithAspects.bind(undefined).should.throw()
+        afterFn2.should.not.have.been.called
+        afterFn.should.have.been.called
 
   describe 'scope of aspects', ->
     it 'should not be the scope of the original function', ->
@@ -120,6 +157,6 @@ describe 'AOP on a function', ->
       fn.should.have.been.calledBefore afterFn1
       afterFn1.should.have.been.calledBefore afterFn2
 
-  xdescribe "exceptions", ->
-
-
+  xdescribe 'afterThrowing', ->
+  xdescribe 'around', ->
+xdescribe 'AOP on objects', ->
