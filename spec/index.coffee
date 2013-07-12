@@ -104,7 +104,22 @@ describe 'AOP on a function', ->
       fnWithAspects()
       beforeFn.should.not.have.been.calledOn scope
       afterFn.should.not.have.been.calledOn scope
-  xdescribe "Adding multiple aspects at once", ->
+  describe "Adding multiple aspects at once", ->
+    it 'should add all the functions passed in parameter to the aspect', ->
+      fn = sinon.spy ->
+      fnWithAspects = maypop fn
+      beforeFn1 = sinon.spy ->
+      beforeFn2 = sinon.spy ->
+      afterFn1 = sinon.spy ->
+      afterFn2 = sinon.spy ->
+      fnWithAspects.before beforeFn1, beforeFn2
+      fnWithAspects.after afterFn1, afterFn2
+      fnWithAspects()
+      beforeFn1.should.have.been.calledBefore beforeFn2
+      beforeFn2.should.have.been.calledBefore fn
+      fn.should.have.been.calledBefore afterFn1
+      afterFn1.should.have.been.calledBefore afterFn2
+
   xdescribe "exceptions", ->
 
 
