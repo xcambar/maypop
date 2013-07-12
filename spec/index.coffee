@@ -92,7 +92,18 @@ describe 'AOP on a function', ->
         @original.should.have.been.calledBefore spy1
         spy1.should.have.been.calledBefore spy2
 
-  xdescribe 'scope of aspects', ->
+  describe 'scope of aspects', ->
+    it 'should not be the scope of the original function', ->
+      scope = {}
+      scopedFn = (->).bind(scope)
+      fnWithAspects = maypop(scopedFn)
+      beforeFn = sinon.spy ->
+      afterFn = sinon.spy ->
+      fnWithAspects.before beforeFn
+      fnWithAspects.after afterFn
+      fnWithAspects()
+      beforeFn.should.not.have.been.calledOn scope
+      afterFn.should.not.have.been.calledOn scope
   xdescribe "Adding multiple aspects at once", ->
   xdescribe "exceptions", ->
 
