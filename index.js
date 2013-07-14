@@ -19,10 +19,20 @@ function expectLength (obj) {
   }
 }
 
-function addAspectsToFunction (fn) {
-  var beforeRegistry = [];
-  var afterRegistry = [];
+function addRunpoint(container, name) {
+  var registry = [];
+  container[name] = function() {
+    var args = slice(arguments);
+    expectLength(args);
+    args.forEach(expectFunction);
+    args.forEach(function (arg) {
+      registry.push(arg);
+    });
+  };
+  return registry;
+}
 
+function addAspectsToFunction (fn) {
   var functionWithAspects = function () {
     var args = arguments;
     beforeRegistry.forEach(function (fn) {
@@ -34,22 +44,10 @@ function addAspectsToFunction (fn) {
     });
     return ret;
   };
-  functionWithAspects.before = function() {
-    var args = slice(arguments);
-    expectLength(args);
-    args.forEach(expectFunction);
-    args.forEach(function (arg) {
-      beforeRegistry.push(arg);
-    });
-  };
-  functionWithAspects.after = function() {
-    var args = slice(arguments);
-    expectLength(args);
-    args.forEach(expectFunction);
-    args.forEach(function (arg) {
-      afterRegistry.push(arg);
-    });
-  };
+
+  var beforeRegistry = addRunpoint(functionWithAspects, 'before');
+  var afterRegistry = addRunpoint(functionWithAspects, 'after');
+
   return functionWithAspects;
 }
 
@@ -62,6 +60,8 @@ module.exports = function (arg) {
     case 'function':
       aspected = addAspectsToFunction(arg);
       break;
+    case 'object':
+      aspected = addAspecteToObject(arg);
     default:
       throw new TypeError('Unable to add aspects to the parameter');
   }
