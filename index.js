@@ -32,6 +32,10 @@ function addRunpoint(container, name) {
   return registry;
 }
 
+function generateRunpointName (runpoint, fnName) {
+  return runpoint + fnName.charAt(0).toUpperCase() + fnName.slice(1);
+}
+
 function addAspectsToFunction (fn) {
   var functionWithAspects = function () {
     var args = arguments;
@@ -51,6 +55,22 @@ function addAspectsToFunction (fn) {
   return functionWithAspects;
 }
 
+//TODO the returned function have .before and .after properties. May be cleaned up a little
+function addAspectsToObject (obj) {
+  Object.keys(obj).forEach(function (k) {
+    if (typeof obj[k] === 'function') {
+      var fn = obj[k];
+      var aspectedFn = addAspectsToFunction(fn);
+      var propDesc = Object.getOwnPropertyDescriptor(obj, k);
+      propDesc.value = aspectedFn;
+      Object.defineProperty(obj, generateRunpointName('before', k), {enumerable: true, value: aspectedFn.before});
+      Object.defineProperty(obj, generateRunpointName('after', k), {enumerable: true, value: aspectedFn.after});
+      Object.defineProperty(obj, k, propDesc);
+    }
+  });
+  return obj;
+}
+
 module.exports = function (arg) {
   var aspected;
   if (arguments.length === 0) {
@@ -61,9 +81,11 @@ module.exports = function (arg) {
       aspected = addAspectsToFunction(arg);
       break;
     case 'object':
-      aspected = addAspecteToObject(arg);
+      aspected = addAspectsToObject(arg);
+      break;
     default:
       throw new TypeError('Unable to add aspects to the parameter');
   }
   return aspected;
 };
+

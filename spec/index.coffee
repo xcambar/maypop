@@ -159,4 +159,27 @@ describe 'AOP on a function', ->
 
   xdescribe 'afterThrowing', ->
   xdescribe 'around', ->
-xdescribe 'AOP on objects', ->
+
+
+describe 'AOP on objects', ->
+  it 'should return the initial object', ->
+    obj = {}
+    aspectedObj = maypop obj
+    obj.should.be.equal aspectedObj
+  it 'should leave an empty object untouched', ->
+    obj = {}
+    aspectedObj = maypop obj
+    aspectedObj.should.be.empty
+  it 'should leave an object without function property untouched', ->
+    obj = {a:true, b:"123", c: [1,2,3]}
+    aspectedObj = maypop obj
+    aspectedObj.should.have.keys ['a', 'b', 'c']
+  describe 'Adding aspects runpoints', ->
+    it 'should name the functions after the properties which values are functions', ->
+      obj = {a: ->}
+      aspectedObj = maypop obj
+      aspectedObj.should.contain.keys ['afterA', 'beforeA']
+    it 'should add them to the object itself', ->
+      obj = {a: ->}
+      aspectedObj = maypop obj
+      obj.should.contain.keys ['afterA', 'beforeA']
