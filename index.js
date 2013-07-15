@@ -19,6 +19,16 @@ function expectLength (obj) {
   }
 }
 
+//Object.getProotypeOf throws a TypeError if the param is not an object
+//We want to be more flexible
+function getPrototypeOf (obj) {
+  try {
+    return Object.getPrototypeOf(obj);
+  } catch (e) {
+    return undefined;
+  }
+}
+
 function addRunpoint(container, name) {
   var registry = [];
   container[name] = function() {
@@ -72,9 +82,8 @@ function addAspectsToFunction (fn) {
 //TODO the returned function have .before and .after properties. May be cleaned up a little
 function addAspectsToObject (obj) {
   Object.keys(obj).forEach(function (k) {
-    if (typeof obj[k] === 'function') {
-      var fn = obj[k];
-      var aspectedFn = addAspectsToFunction(fn);
+    if (getPrototypeOf(obj[k]) === Function.prototype) {
+      var aspectedFn = addAspectsToFunction(obj[k]);
       var propDesc = Object.getOwnPropertyDescriptor(obj, k);
       propDesc.value = aspectedFn;
       Object.defineProperty(obj, generateRunpointName('before', k), {enumerable: true, value: aspectedFn.before});
@@ -90,11 +99,11 @@ module.exports = function (arg) {
   if (arguments.length === 0) {
     throw new Error('You must pass a parameter to maypop');
   }
-  switch(typeof arg) {
-    case 'function':
+  switch(getPrototypeOf(arg)) {
+    case Function.prototype:
       aspected = addAspectsToFunction(arg);
       break;
-    case 'object':
+    case Object.prototype:
       aspected = addAspectsToObject(arg);
       break;
     default:
