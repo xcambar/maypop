@@ -158,7 +158,62 @@ describe 'AOP on a function', ->
       afterFn1.should.have.been.calledBefore afterFn2
 
   xdescribe 'afterThrowing', ->
-  xdescribe 'around', ->
+
+  describe 'around', ->
+    it 'should have an "around" function available', ->
+      maypop(->).should.contain.keys ['around']
+    describe 'arguments', ->
+      it 'should be passed a function as the first arguments', ->
+        aroundFn = sinon.spy()
+        fnWithAspects = maypop(->)
+        fnWithAspects.around aroundFn
+        fnWithAspects()
+        aroundFn.args[0][0].should.be.a 'function'
+      it 'should be passed the parameters of the original function as 2nd+ parameter', ->
+        aroundFn = sinon.spy()
+        fnWithAspects = maypop(->)
+        fnWithAspects.around aroundFn
+        args = [123, "123"]
+        fnWithAspects(args[0], args[1])
+        console.log aroundFn.args[0]
+        aroundFn.args[0][1].should.eql args[0]
+        aroundFn.args[0][2].should.eql args[1]
+    describe 'executing code around', ->
+      it 'should yield to the next function when executing the first parameter', ->
+        spyBefore = sinon.spy()
+        spyAfter = sinon.spy()
+        aroundFn = (_yield)->
+          spyBefore()
+          _yield()
+          spyAfter()
+        fn = sinon.spy()
+        fnWithAspects = maypop fn
+        fnWithAspects.around aroundFn
+        fnWithAspects()
+        spyBefore.should.have.been.calledBefore fn
+        spyAfter.should.have.been.calledAfter fn
+      it 'should work recursively with multiple "around" functions', ->
+        spyBefore1 = sinon.spy()
+        spyAfter1 = sinon.spy()
+        spyBefore2 = sinon.spy()
+        spyAfter2 = sinon.spy()
+        aroundFn1 = (_yield)->
+          spyBefore1()
+          _yield()
+          spyAfter1()
+        aroundFn2 = (_yield)->
+          spyBefore2()
+          _yield()
+          spyAfter2()
+        fn = sinon.spy()
+        fnWithAspects = maypop fn
+        fnWithAspects.around aroundFn1
+        fnWithAspects.around aroundFn2
+        fnWithAspects()
+        spyBefore2.should.have.been.calledBefore spyBefore1
+        spyBefore1.should.have.been.calledBefore fn
+        spyAfter1.should.have.been.calledAfter fn
+        spyAfter2.should.have.been.calledAfter spyAfter1
 
 
 describe 'AOP on objects', ->
