@@ -18,7 +18,7 @@ describe 'AOP on a function', ->
   describe 'the returned function', ->
     beforeEach ->
       @returnValue = {}
-      @original = sinon.spy( -> @returnValue)
+      @original = sinon.spy( => @returnValue)
       @maypop = maypop(@original)
     it 'should have a "before" and "after" property', ->
       @maypop.should.contain.keys ['before', 'after']
