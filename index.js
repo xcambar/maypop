@@ -38,11 +38,24 @@ function generateRunpointName (runpoint, fnName) {
 
 function addAspectsToFunction (fn) {
   var functionWithAspects = function () {
-    var args = arguments;
+    var scope = this;
+    var args = slice(arguments);
     beforeRegistry.forEach(function (fn) {
       fn.apply(undefined, args);
     });
-    var ret = fn.apply(this, arguments);
+    var boundAroundFns = [];
+    [fn].concat(aroundRegistry).forEach(function (aroundFn, i) {
+      var fnScope = boundAroundFns.length ? undefined : scope;
+      if (aroundFn !== fn) {
+        var next = boundAroundFns[i - 1];
+        args = [next].concat(args);
+      }
+      args.forEach(function (arg) {
+        aroundFn = aroundFn.bind(fnScope, arg);
+      });
+      boundAroundFns.push(aroundFn);
+    });
+    var ret = boundAroundFns[boundAroundFns.length - 1]();
     afterRegistry.forEach(function (fn) {
       fn.call(undefined, ret);
     });
@@ -50,6 +63,7 @@ function addAspectsToFunction (fn) {
   };
 
   var beforeRegistry = addRunpoint(functionWithAspects, 'before');
+  var aroundRegistry = addRunpoint(functionWithAspects, 'around');
   var afterRegistry = addRunpoint(functionWithAspects, 'after');
 
   return functionWithAspects;
